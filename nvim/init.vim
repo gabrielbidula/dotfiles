@@ -5,6 +5,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'w0rp/ale'
 Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'romainl/Apprentice'
 Plug 'airblade/vim-gitgutter'
 Plug 'jiangmiao/auto-pairs'
@@ -25,12 +26,14 @@ Plug 'tpope/vim-fugitive'
 Plug 'ncm2/ncm2-tern',  {'do': 'npm install'}
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'morhetz/gruvbox'
+
 call plug#end()
 
 
 set autoread
 
-colorscheme apprentice
+colorscheme gruvbox
 set background=dark
 
 set hidden
@@ -86,3 +89,6 @@ nmap <Leader>h :call phpactor#Hover()<CR>
 
 " FZF search word under cursor with AG
 nnoremap <silent> <Leader>ag :Ag <C-R><C-W><CR>
+
+let g:gruvbox_contrast_dark='soft'
+let g:airline_theme='badwolf'
