@@ -28,8 +28,8 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'morhetz/gruvbox'
 
+Plug 'jremmen/vim-ripgrep'
 call plug#end()
-
 
 set autoread
 
@@ -55,7 +55,7 @@ set termguicolors
 set mouse=a
 
 set inccommand=split
-set clipboard=unnamed
+set clipboard+=unnamed
 
 " show existing tab with 4 spaces width
 set tabstop=4
