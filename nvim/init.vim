@@ -67,6 +67,16 @@ set expandtab
 let mapleader=","
 
 nnoremap <c-p> :Files<cr>
+
+  " Default options are --nogroup --column --color
+  let s:ag_options = ' -F '
+
+  command! -bang -nargs=* Ag
+        \ call fzf#vim#ag(
+        \   <q-args>,
+        \   s:ag_options,
+        \  <bang>0)
+
 nnoremap <c-f> :Ag<space>
 
 
