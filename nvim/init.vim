@@ -92,3 +92,4 @@ nnoremap <silent> <Leader>ag :Ag <C-R><C-W><CR>
 
 let g:gruvbox_contrast_dark='soft'
 let g:airline_theme='badwolf'
+
