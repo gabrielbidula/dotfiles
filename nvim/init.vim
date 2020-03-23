@@ -13,6 +13,7 @@ Plug 'scrooloose/nerdcommenter'
 " assuming you're using vim-plug: https://github.com/junegunn/vim-plug
 Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
+Plug 'w0ng/vim-hybrid'
 
 " Include Phpactor
 Plug 'phpactor/phpactor' ,  {'do': 'composer install', 'for': 'php'}
@@ -29,6 +30,8 @@ Plug 'honza/vim-snippets'
 Plug 'morhetz/gruvbox'
 
 Plug 'jremmen/vim-ripgrep'
+Plug 'xolox/vim-notes'
+Plug 'xolox/vim-misc'
 call plug#end()
 
 set autoread
@@ -68,14 +71,15 @@ let mapleader=","
 
 nnoremap <c-p> :Files<cr>
 
-  " Default options are --nogroup --column --color
-  let s:ag_options = ' -F '
+" Default options are --nogroup --column --color
+" Alias for --literal (fixed-strings) for compatibility with grep.
+let s:ag_options = ' -F '
 
-  command! -bang -nargs=* Ag
-        \ call fzf#vim#ag(
-        \   <q-args>,
-        \   s:ag_options,
-        \  <bang>0)
+command! -bang -nargs=* Ag
+    \ call fzf#vim#ag(
+    \   <q-args>,
+    \   s:ag_options,
+    \  <bang>0)
 
 nnoremap <c-f> :Ag<space>
 
@@ -103,3 +107,11 @@ nnoremap <silent> <Leader>ag :Ag <C-R><C-W><CR>
 let g:gruvbox_contrast_dark='soft'
 let g:airline_theme='badwolf'
 
+"PHP CS Fixer by php-cs-fixer
+command! -nargs=1 Silent execute ':silent !'.<q-args> | execute ':redraw!'
+map <Leader>S <esc>:w<cr>:Silent php-cs-fixer fix %:p --rules=@PSR2<cr>
+
+"PHP CS Fixer by ALE
+let g:ale_php_phpcs_executable='/usr/local/bin/phpcs'
+let g:ale_php_php_cs_fixer_executable='/usr/local/bin/php-cs-fixer'
+let g:ale_fixers = {'php': ['php_cs_fixer']}
