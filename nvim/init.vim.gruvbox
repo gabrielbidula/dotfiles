@@ -13,6 +13,7 @@ Plug 'scrooloose/nerdcommenter'
 " assuming you're using vim-plug: https://github.com/junegunn/vim-plug
 Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
+Plug 'w0ng/vim-hybrid'
 
 " Include Phpactor
 Plug 'phpactor/phpactor' ,  {'do': 'composer install', 'for': 'php'}
@@ -35,7 +36,7 @@ call plug#end()
 
 set autoread
 
-colorscheme nerv-ous
+colorscheme gruvbox
 set background=dark
 
 set hidden
@@ -103,8 +104,8 @@ nmap <Leader>h :call phpactor#Hover()<CR>
 " FZF search word under cursor with AG
 nnoremap <silent> <Leader>ag :Ag <C-R><C-W><CR>
 
-"let g:gruvbox_contrast_dark='soft'
-let g:airline_theme='zenburn'
+let g:gruvbox_contrast_dark='soft'
+let g:airline_theme='badwolf'
 
 "PHP CS Fixer by php-cs-fixer
 command! -nargs=1 Silent execute ':silent !'.<q-args> | execute ':redraw!'
