@@ -10,32 +10,19 @@ Plug 'romainl/Apprentice'
 Plug 'airblade/vim-gitgutter'
 Plug 'jiangmiao/auto-pairs'
 Plug 'scrooloose/nerdcommenter'
-" assuming you're using vim-plug: https://github.com/junegunn/vim-plug
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
-
-" Include Phpactor
-Plug 'phpactor/phpactor' ,  {'do': 'composer install', 'for': 'php'}
-
-" Require ncm2 and this plugin
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
-Plug 'phpactor/ncm2-phpactor'
-
 Plug 'tpope/vim-fugitive'
-Plug 'ncm2/ncm2-tern',  {'do': 'npm install'}
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'morhetz/gruvbox'
-
 Plug 'jremmen/vim-ripgrep'
 Plug 'xolox/vim-notes'
 Plug 'xolox/vim-misc'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
 set autoread
 
-colorscheme nerv-ous
+colorscheme gruvbox
 set background=dark
 
 set hidden
@@ -82,29 +69,11 @@ command! -bang -nargs=* Ag
 
 nnoremap <c-f> :Ag<space>
 
-
-autocmd FileType php setlocal omnifunc=phpactor#Complete
-
-" enable ncm2 for all buffers
-autocmd BufEnter * call ncm2#enable_for_buffer()
-
-" IMPORTANT: :help Ncm2PopupOpen for more information
-set completeopt=noinsert,menuone,noselect
-
-" Include use statement
-nmap <Leader>u :call phpactor#UseAdd()<CR>
-
-" Goto definition of class or class member under the cursor
-nmap <Leader>g :call phpactor#GotoDefinition()<CR>
-
-" Show brief information about the symbol under the cursor
-nmap <Leader>h :call phpactor#Hover()<CR>
-
 " FZF search word under cursor with AG
 nnoremap <silent> <Leader>ag :Ag <C-R><C-W><CR>
 
 "let g:gruvbox_contrast_dark='soft'
-let g:airline_theme='zenburn'
+let g:airline_theme='badwolf'
 
 "PHP CS Fixer by php-cs-fixer
 command! -nargs=1 Silent execute ':silent !'.<q-args> | execute ':redraw!'
@@ -114,3 +83,20 @@ map <Leader>S <esc>:w<cr>:Silent php-cs-fixer fix %:p --rules=@PSR2<cr>
 let g:ale_php_phpcs_executable='/usr/local/bin/phpcs'
 let g:ale_php_php_cs_fixer_executable='/usr/local/bin/php-cs-fixer'
 let g:ale_fixers = {'php': ['php_cs_fixer']}
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+"GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
