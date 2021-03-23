@@ -24,7 +24,7 @@ call plug#end()
 
 set autoread
 
-colorscheme sourcerer
+colorscheme gruvbox
 set background=dark
 
 set hidden
@@ -79,7 +79,7 @@ nnoremap <silent> <Leader>ag :Ag <C-R><C-W><CR>
 nnoremap <silent> <Leader>rg :Rg <C-R><C-W><CR>
 
 "let g:gruvbox_contrast_dark='soft'
-let g:airline_theme='base16'
+let g:airline_theme='badwolf'
 
 "PHP CS Fixer by php-cs-fixer
 command! -nargs=1 Silent execute ':silent !'.<q-args> | execute ':redraw!'
