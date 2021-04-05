@@ -19,12 +19,11 @@ Plug 'xolox/vim-misc'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'vim-scripts/bash-support.vim'
-Plug 'xero/sourcerer.vim'
 call plug#end()
 
 set autoread
 
-colorscheme gruvbox
+colorscheme apprentice
 set background=dark
 
 set hidden
@@ -76,10 +75,8 @@ nnoremap <c-f> :Ag<space>
 " FZF search word under cursor with AG
 nnoremap <silent> <Leader>ag :Ag <C-R><C-W><CR>
 
-nnoremap <silent> <Leader>rg :Rg <C-R><C-W><CR>
-
 "let g:gruvbox_contrast_dark='soft'
-let g:airline_theme='badwolf'
+let g:airline_theme='apprentice'
 
 "PHP CS Fixer by php-cs-fixer
 command! -nargs=1 Silent execute ':silent !'.<q-args> | execute ':redraw!'
