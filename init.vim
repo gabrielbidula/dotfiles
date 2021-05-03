@@ -19,6 +19,7 @@ Plug 'xolox/vim-misc'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'vim-scripts/bash-support.vim'
+Plug 'fatih/vim-go'
 call plug#end()
 
 set autoread
@@ -55,6 +56,10 @@ set shiftwidth=4
 set expandtab
 
 set redrawtime=10000
+
+" Netrw
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
 
 let mapleader=","
 
@@ -101,7 +106,23 @@ endfunction
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-"GoTo code navigation.
+" Coc commands
 nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> rn <Plug>(coc-rename)
+nmap <silent> ga <Plug>(coc-codeaction)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gi <Plug>(coc-implementation)
 
-nmap <C-s> :syn sync fromstart<CR>
+"\	'.' : [':CocConfig'                          , 'config'],
+"\	'a' : ['<Plug>(coc-codeaction)'              , 'code action'],
+"\	'd' : ['<Plug>(coc-definition)'              , 'definition'],
+"\	'f' : ['<Plug>(coc-format-selected)'         , 'format selected'],
+"\	'i' : ['<Plug>(coc-implementation)'          , 'implementation'],
+"\	'm' : [':CocList diagnostics'                , 'diagnostics messages'],
+"\	'n' : ['<Plug>(coc-diagnostic-next-error)'   , 'next error'],
+"\	'p' : ['<Plug>(coc-diagnostic-prev-error)'   , 'prev error'],
+"\	'e' : ['<Plug>(coc-rename)'                  , 'edit name (rename)'],
+"\	'r' : ['<Plug>(coc-references)'              , 'references'],
+"\	's' : [':CocList -I symbols'                 , 'search symbols'],
+"\	't' : ['<Plug>(coc-type-definition)'         , 'type definition'],
+"\}
