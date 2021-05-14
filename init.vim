@@ -1,8 +1,10 @@
 call plug#begin()
 Plug 'terryma/vim-multiple-cursors'
 Plug 'sheerun/vim-polyglot'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+Plug 'antoinemadec/coc-fzf'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'romainl/Apprentice'
@@ -20,12 +22,17 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'vim-scripts/bash-support.vim'
 Plug 'fatih/vim-go'
+Plug 'chriskempson/base16-vim'
 call plug#end()
 
 set autoread
 
-colorscheme apprentice
+set termguicolors
 set background=dark
+colorscheme apprentice
+
+" Set BAT THEME
+"let $BAT_THEME='base16-256'
 
 set hidden
 
@@ -41,7 +48,6 @@ set noswapfile
 
 set number
 set relativenumber
-set termguicolors
 
 set mouse=a
 
@@ -63,6 +69,7 @@ let g:netrw_liststyle = 3
 
 let mapleader=","
 
+" Open search for files
 nnoremap <c-p> :Files<cr>
 
 " Default options are --nogroup --column --color
@@ -75,6 +82,7 @@ command! -bang -nargs=* Ag
     \   s:ag_options,
     \  <bang>0)
 
+" Call AG
 nnoremap <c-f> :Ag<space>
 
 " FZF search word under cursor with AG
@@ -83,14 +91,12 @@ nnoremap <silent> <Leader>ag :Ag <C-R><C-W><CR>
 "let g:gruvbox_contrast_dark='soft'
 let g:airline_theme='apprentice'
 
-"PHP CS Fixer by php-cs-fixer
-command! -nargs=1 Silent execute ':silent !'.<q-args> | execute ':redraw!'
-map <Leader>S <esc>:w<cr>:Silent php-cs-fixer fix %:p --rules=@PSR2<cr>
-
-"PHP CS Fixer by ALE
-let g:ale_php_phpcs_executable='/usr/local/bin/phpcs'
-let g:ale_php_php_cs_fixer_executable='/usr/local/bin/php-cs-fixer'
-let g:ale_fixers = {'php': ['php_cs_fixer']}
+" ########## Coc - Start ##########
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -106,23 +112,26 @@ endfunction
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Coc commands
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> rn <Plug>(coc-rename)
-nmap <silent> ga <Plug>(coc-codeaction)
-nmap <silent> gr <Plug>(coc-references)
-nmap <silent> gi <Plug>(coc-implementation)
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
 
-"\	'.' : [':CocConfig'                          , 'config'],
-"\	'a' : ['<Plug>(coc-codeaction)'              , 'code action'],
-"\	'd' : ['<Plug>(coc-definition)'              , 'definition'],
-"\	'f' : ['<Plug>(coc-format-selected)'         , 'format selected'],
-"\	'i' : ['<Plug>(coc-implementation)'          , 'implementation'],
-"\	'm' : [':CocList diagnostics'                , 'diagnostics messages'],
-"\	'n' : ['<Plug>(coc-diagnostic-next-error)'   , 'next error'],
-"\	'p' : ['<Plug>(coc-diagnostic-prev-error)'   , 'prev error'],
-"\	'e' : ['<Plug>(coc-rename)'                  , 'edit name (rename)'],
-"\	'r' : ['<Plug>(coc-references)'              , 'references'],
-"\	's' : [':CocList -I symbols'                 , 'search symbols'],
-"\	't' : ['<Plug>(coc-type-definition)'         , 'type definition'],
-"\}
+" Formatting selected code.
+xmap <leader>f <Plug>(coc-format-selected)
+nmap <leader>f <Plug>(coc-format-selected)
+
+" Open code action modal
+nmap <leader>ac <Plug>(coc-codeaction)
+
+nnoremap <silent> <leader>ac :<C-u>CocFzfList actions<CR>
+nnoremap <silent> <leader>dw :<C-u>CocFzfList diagnostics<CR>
+nnoremap <silent> <leader>db :<C-u>CocFzfList diagnostics --current-buf<CR>
+
+" ########## Coc - End ##########
+
+" Customize fzf colors to match your color scheme
+"
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+
+let g:coc_fzf_preview = ''
+let g:coc_fzf_opts = []
+
