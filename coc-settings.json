@@ -1,4 +1,6 @@
 {
+  "intelephense.licenceKey": "00H6SQZZR2RUXRU",
+  "yaml.format.enable": true,
   "languageserver": {
     "intelephense": {
       "command": "intelephense",
