@@ -22,14 +22,18 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'vim-scripts/bash-support.vim'
 Plug 'fatih/vim-go'
-Plug 'chriskempson/base16-vim'
+Plug 'preservim/nerdtree'
+Plug 'owickstrom/vim-colors-paramount'
+Plug 'lurst/austere.vim'
+Plug 'fxn/vim-monochrome'
+Plug 'iamcco/diagnostic-languageserver', { 'do': 'yarn install' }
 call plug#end()
 
 set autoread
 
 set termguicolors
 set background=dark
-colorscheme apprentice
+colorscheme paramount
 
 " Set BAT THEME
 "let $BAT_THEME='base16-256'
@@ -39,6 +43,7 @@ set hidden
 " Do not display modes on bottom row
 set noshowmode
 
+" Always split right by default
 set splitright
 
 " Do not keep any history
@@ -89,7 +94,7 @@ nnoremap <c-f> :Ag<space>
 nnoremap <silent> <Leader>ag :Ag <C-R><C-W><CR>
 
 "let g:gruvbox_contrast_dark='soft'
-let g:airline_theme='apprentice'
+let g:airline_theme='minimalist'
 
 " ########## Coc - Start ##########
 " GoTo code navigation.
@@ -135,3 +140,7 @@ let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 let g:coc_fzf_preview = ''
 let g:coc_fzf_opts = []
 
+" NerdTree
+nnoremap <leader>n :NERDTreeFind<CR>
+nnoremap <C-n> :NERDTree<CR>
+let NERDTreeShowHidden=1
