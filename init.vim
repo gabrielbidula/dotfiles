@@ -8,7 +8,6 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
 Plug 'sheerun/vim-polyglot'
 Plug 'jiangmiao/auto-pairs'
-Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-fugitive'
 Plug 'xolox/vim-notes'
 Plug 'xolox/vim-misc'
@@ -23,6 +22,8 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'vim-test/vim-test'
+Plug 'praem90/nvim-phpcsf'
 call plug#end()
 
 set autoread
@@ -54,12 +55,6 @@ set clipboard+=unnamed
 
 " nvim compe
 set completeopt=menuone,noselect
-" show existing tab with 4 spaces width
-set tabstop=4
-" when indenting with '>', use 4 spaces width
-set shiftwidth=4
-" On pressing tab, insert 4 spaces
-set expandtab
 
 let mapleader=","
 
@@ -74,11 +69,21 @@ nnoremap <c-p> <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fc <cmd>Telescope grep_string<cr>
 nnoremap <c-f> <cmd>lua require('telescope.builtin').grep_string{ use_regex = true, search = vim.fn.input('Grep for > ' ) }<cr>
-"nnoremap <c-f> <cmd>lua require'telescope.builtin'.grep_string{ shorten_path = true, word_match = "-w", only_sort_text = true, search = '' }<cr>
+nnoremap <leader>d <cmd>Telescope lsp_document_diagnostics<cr>
+nnoremap <leader>wd <cmd>Telescope lsp_workspace_diagnostics<cr>
+nnoremap <leader>fr <cmd>Telescope lsp_references<cr>
+nnoremap <silent>gd <cmd>Telescope lsp_definitions<cr>
+nnoremap <leader>ca <cmd>Telescope lsp_code_actions<cr>
 
 lua << EOF
 
--- Telescope setup
+require'lspconfig'.html.setup{}
+require'lspconfig'.graphql.setup{}
+require'lspconfig'.dockerls.setup{}
+require'lspconfig'.tsserver.setup{}
+require'lspconfig'.vuels.setup{}
+require'lspconfig'.bashls.setup{}
+require'lspconfig'.jsonls.setup{}
 require('telescope').setup{
   defaults = {
     vimgrep_arguments = {
@@ -134,10 +139,12 @@ require('telescope').setup{
   }
 }
 
--- Intelephense setup
-require'lspconfig'.intelephense.setup{}
+require'lspconfig'.intelephense.setup{
+  init_options = {
+    licenceKey = "/Users/gabriel/intelephense/licence.txt",
+  }
+}
 
--- Compe setup
 require'compe'.setup {
   enabled = true;
   autocomplete = true;
@@ -211,29 +218,50 @@ local on_attach = function(client, bufnr)
   local opts = { noremap=true, silent=true }
 
   -- See `:help vim.lsp.*` for documentation on any of the below functions
-  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  --buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  --buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  --buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  --buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  --buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  --buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', '<leader>ld', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  --buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  --buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  --buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
   buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
 end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { "intelephense" }
+local servers = { "intelephense", "jsonls", "bashls", "vuels", "tsserver" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
 EOF
 
+" vim-test
+let test#strategy = {
+  \ 'nearest': 'neovim',
+  \ 'file':    'dispatch',
+  \ 'suite':   'basic',
+\}
+let g:test#preserve_screen = 1
+
+nmap <silent> t<C-n> :TestNearest<CR>
+nmap <silent> t<C-f> :TestFile<CR>
+nmap <silent> t<C-s> :TestSuite<CR>
+nmap <silent> t<C-l> :TestLast<CR>
+nmap <silent> t<C-v> :TestVisit<CR>
+
+" nvim-phpcsf
+let g:nvim_phpcs_config_phpcs_path = '/Users/gabriel/.composer/vendor/bin/phpcs'
+let g:nvim_phpcs_config_phpcbf_path = '/Users/gabriel/.composer/vendor/bin/phpcbf'
+let g:nvim_phpcs_config_phpcs_standard = 'PSR12' " or path to your ruleset phpcs.xml
+
+nnoremap <leader>cs <cmd>:lua require'phpcs'.cs()<cr>
+nnoremap <leader>cbf <cmd>:lua require'phpcs'.cbf()<cr>
