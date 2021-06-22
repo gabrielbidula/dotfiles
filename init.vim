@@ -24,6 +24,7 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'vim-test/vim-test'
 Plug 'praem90/nvim-phpcsf'
+Plug 'nvim-lua/completion-nvim'
 call plug#end()
 
 set autoread
@@ -53,8 +54,6 @@ set mouse=a
 set inccommand=split
 set clipboard+=unnamed
 
-" nvim compe
-set completeopt=menuone,noselect
 
 let mapleader=","
 
@@ -75,8 +74,17 @@ nnoremap <leader>fr <cmd>Telescope lsp_references<cr>
 nnoremap <silent>gd <cmd>Telescope lsp_definitions<cr>
 nnoremap <leader>ca <cmd>Telescope lsp_code_actions<cr>
 
-lua << EOF
+" Completion setup
+set completeopt=menuone,noinsert,noselect
+let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+lua require'lspconfig'.html.setup{on_attach=require'completion'.on_attach}
+lua require'lspconfig'.graphql.setup{on_attach=require'completion'.on_attach}
+lua require'lspconfig'.dockerls.setup{on_attach=require'completion'.on_attach}
+lua require'lspconfig'.tsserver.setup{on_attach=require'completion'.on_attach}
+lua require'lspconfig'.bashls.setup{on_attach=require'completion'.on_attach}
+lua require'lspconfig'.jsonls.setup{on_attach=require'completion'.on_attach}
 
+lua << EOF
 require'lspconfig'.html.setup{}
 require'lspconfig'.graphql.setup{}
 require'lspconfig'.dockerls.setup{}
@@ -237,7 +245,7 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { "intelephense", "jsonls", "bashls", "vuels", "tsserver" }
+local servers = { "intelephense", "jsonls", "bashls", "vuels", "tsserver", "html", "graphql" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
@@ -265,3 +273,5 @@ let g:nvim_phpcs_config_phpcs_standard = 'PSR12' " or path to your ruleset phpcs
 
 nnoremap <leader>cs <cmd>:lua require'phpcs'.cs()<cr>
 nnoremap <leader>cbf <cmd>:lua require'phpcs'.cbf()<cr>
+noremap <silent><leader>rn :Lspsaga rename<CR>
+
