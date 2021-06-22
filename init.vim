@@ -273,5 +273,4 @@ let g:nvim_phpcs_config_phpcs_standard = 'PSR12' " or path to your ruleset phpcs
 
 nnoremap <leader>cs <cmd>:lua require'phpcs'.cs()<cr>
 nnoremap <leader>cbf <cmd>:lua require'phpcs'.cbf()<cr>
-noremap <silent><leader>rn :Lspsaga rename<CR>
 
