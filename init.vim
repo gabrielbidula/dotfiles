@@ -16,7 +16,6 @@ Plug 'preservim/nerdtree'
 Plug 'iamcco/diagnostic-languageserver', { 'do': 'yarn install' }
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
-Plug 'ajh17/spacegray.vim'
 Plug 'morhetz/gruvbox'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
@@ -54,7 +53,6 @@ set mouse=a
 set inccommand=split
 set clipboard+=unnamed
 
-
 let mapleader=","
 
 let g:airline_theme='gruvbox'
@@ -73,6 +71,7 @@ nnoremap <leader>wd <cmd>Telescope lsp_workspace_diagnostics<cr>
 nnoremap <leader>fr <cmd>Telescope lsp_references<cr>
 nnoremap <silent>gd <cmd>Telescope lsp_definitions<cr>
 nnoremap <leader>ca <cmd>Telescope lsp_code_actions<cr>
+nnoremap <leader>fb <cmd>Telescope file_browser<cr>
 
 " Completion setup
 set completeopt=menuone,noinsert,noselect
