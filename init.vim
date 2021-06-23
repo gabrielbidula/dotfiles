@@ -109,6 +109,8 @@ lua require'lspconfig'.tsserver.setup{on_attach=require'completion'.on_attach}
 lua require'lspconfig'.bashls.setup{on_attach=require'completion'.on_attach}
 lua require'lspconfig'.jsonls.setup{on_attach=require'completion'.on_attach}
 lua require'lspconfig'.vimls.setup{on_attach=require'completion'.on_attach}
+lua require'lspconfig'.yamlls.setup{on_attach=require'completion'.on_attach}
+
 
 lua << EOF
 require'nvim-web-devicons'.setup {}
@@ -118,8 +120,17 @@ require'lspconfig'.dockerls.setup{}
 require'lspconfig'.tsserver.setup{}
 require'lspconfig'.vuels.setup{}
 require'lspconfig'.bashls.setup{}
-require'lspconfig'.jsonls.setup{}
 require'lspconfig'.vimls.setup{}
+require'lspconfig'.yamlls.setup{}
+require'lspconfig'.jsonls.setup {
+    commands = {
+      Format = {
+        function()
+          vim.lsp.buf.range_formatting({},{0,0},{vim.fn.line("$"),0})
+        end
+      }
+    }
+}
 require('telescope').setup{
   defaults = {
     vimgrep_arguments = {
@@ -217,10 +228,11 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { "intelephense", "jsonls", "bashls", "vuels", "tsserver", "html", "graphql", "vimls" }
+local servers = { "intelephense", "jsonls", "bashls", "vuels", "tsserver", "html", "graphql", "vimls", "yamlls" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
+
 
 EOF
 
