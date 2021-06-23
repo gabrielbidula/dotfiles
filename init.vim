@@ -24,6 +24,7 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'vim-test/vim-test'
 Plug 'praem90/nvim-phpcsf'
 Plug 'nvim-lua/completion-nvim'
+Plug 'kyazdani42/nvim-web-devicons'
 call plug#end()
 
 set autoread
@@ -61,7 +62,7 @@ nnoremap <leader>n :NERDTreeFind<CR>
 nnoremap <C-n> :NERDTree<CR>
 let NERDTreeShowHidden=1
 
-" Find files using Telescope command-line sugar.
+"Telescope mappings
 nnoremap <c-p> <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fc <cmd>Telescope grep_string<cr>
@@ -73,6 +74,31 @@ nnoremap <silent>gd <cmd>Telescope lsp_definitions<cr>
 nnoremap <leader>ca <cmd>Telescope lsp_code_actions<cr>
 nnoremap <leader>fb <cmd>Telescope file_browser<cr>
 
+"Compe mappings
+inoremap <silent><expr> <CR> compe#confirm('<CR>')
+
+" vim-test
+let test#strategy = {
+  \ 'nearest': 'neovim',
+  \ 'file':    'dispatch',
+  \ 'suite':   'basic',
+\}
+let g:test#preserve_screen = 1
+
+nmap <silent> t<C-n> :TestNearest<CR>
+nmap <silent> t<C-f> :TestFile<CR>
+nmap <silent> t<C-s> :TestSuite<CR>
+nmap <silent> t<C-l> :TestLast<CR>
+nmap <silent> t<C-v> :TestVisit<CR>
+
+" nvim-phpcsf
+let g:nvim_phpcs_config_phpcs_path = '/Users/gabriel/.composer/vendor/bin/phpcs'
+let g:nvim_phpcs_config_phpcbf_path = '/Users/gabriel/.composer/vendor/bin/phpcbf'
+let g:nvim_phpcs_config_phpcs_standard = 'PSR12' " or path to your ruleset phpcs.xml
+
+nnoremap <leader>cs <cmd>:lua require'phpcs'.cs()<cr>
+nnoremap <leader>cbf <cmd>:lua require'phpcs'.cbf()<cr>
+
 " Completion setup
 set completeopt=menuone,noinsert,noselect
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
@@ -82,8 +108,10 @@ lua require'lspconfig'.dockerls.setup{on_attach=require'completion'.on_attach}
 lua require'lspconfig'.tsserver.setup{on_attach=require'completion'.on_attach}
 lua require'lspconfig'.bashls.setup{on_attach=require'completion'.on_attach}
 lua require'lspconfig'.jsonls.setup{on_attach=require'completion'.on_attach}
+lua require'lspconfig'.vimls.setup{on_attach=require'completion'.on_attach}
 
 lua << EOF
+require'nvim-web-devicons'.setup {}
 require'lspconfig'.html.setup{}
 require'lspconfig'.graphql.setup{}
 require'lspconfig'.dockerls.setup{}
@@ -91,6 +119,7 @@ require'lspconfig'.tsserver.setup{}
 require'lspconfig'.vuels.setup{}
 require'lspconfig'.bashls.setup{}
 require'lspconfig'.jsonls.setup{}
+require'lspconfig'.vimls.setup{}
 require('telescope').setup{
   defaults = {
     vimgrep_arguments = {
@@ -103,13 +132,8 @@ require('telescope').setup{
       '--smart-case',
       '--fixed-strings'
     },
-    prompt_position = "bottom",
-    prompt_prefix = "> ",
-    selection_caret = "> ",
-    entry_prefix = "  ",
-    initial_mode = "insert",
-    selection_strategy = "reset",
-    sorting_strategy = "descending",
+    prompt_position = "top",
+    sorting_strategy = "ascending",
     layout_strategy = "flex",
     winblend = 5,
     layout_defaults = {
@@ -124,25 +148,6 @@ require('telescope').setup{
         preview_height = 0.5,
       }
     },
-    file_sorter =  require'telescope.sorters'.get_fuzzy_file,
-    file_ignore_patterns = {},
-    generic_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
-    shorten_path = true,
-    width = 0.75,
-    preview_cutoff = 120,
-    results_height = 1,
-    results_width = 0.8,
-    border = {},
-    borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
-    color_devicons = true,
-    use_less = true,
-    set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
-    file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
-    grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
-    qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
-
-    -- Developer configurations: Not meant for general override
-    buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
   }
 }
 
@@ -160,6 +165,7 @@ require'compe'.setup {
   preselect = 'enable';
   throttle_time = 80;
   source_timeout = 200;
+  resolve_timeout = 800;
   incomplete_delay = 400;
   max_abbr_width = 100;
   max_kind_width = 100;
@@ -168,47 +174,14 @@ require'compe'.setup {
 
   source = {
     path = true;
+    buffer = true;
+    calc = true;
     nvim_lsp = true;
+    nvim_lua = true;
+    vsnip = true;
+    ultisnips = true;
   };
 }
-
-local t = function(str)
-  return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-local check_back_space = function()
-    local col = vim.fn.col('.') - 1
-    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
-        return true
-    else
-        return false
-    end
-end
-
--- Use (s-)tab to:
---- move to prev/next item in completion menuone
---- jump to prev/next snippet's placeholder
-_G.tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t "<C-n>"
-  elseif check_back_space() then
-    return t "<Tab>"
-  else
-    return vim.fn['compe#complete']()
-  end
-end
-_G.s_tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t "<C-p>"
-  else
-    return t "<S-Tab>"
-  end
-end
-
-vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 
 local nvim_lsp = require('lspconfig')
 
@@ -244,32 +217,11 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { "intelephense", "jsonls", "bashls", "vuels", "tsserver", "html", "graphql" }
+local servers = { "intelephense", "jsonls", "bashls", "vuels", "tsserver", "html", "graphql", "vimls" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
 EOF
 
-" vim-test
-let test#strategy = {
-  \ 'nearest': 'neovim',
-  \ 'file':    'dispatch',
-  \ 'suite':   'basic',
-\}
-let g:test#preserve_screen = 1
-
-nmap <silent> t<C-n> :TestNearest<CR>
-nmap <silent> t<C-f> :TestFile<CR>
-nmap <silent> t<C-s> :TestSuite<CR>
-nmap <silent> t<C-l> :TestLast<CR>
-nmap <silent> t<C-v> :TestVisit<CR>
-
-" nvim-phpcsf
-let g:nvim_phpcs_config_phpcs_path = '/Users/gabriel/.composer/vendor/bin/phpcs'
-let g:nvim_phpcs_config_phpcbf_path = '/Users/gabriel/.composer/vendor/bin/phpcbf'
-let g:nvim_phpcs_config_phpcs_standard = 'PSR12' " or path to your ruleset phpcs.xml
-
-nnoremap <leader>cs <cmd>:lua require'phpcs'.cs()<cr>
-nnoremap <leader>cbf <cmd>:lua require'phpcs'.cbf()<cr>
 
