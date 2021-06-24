@@ -1,3 +1,10 @@
+" #############################################################################
+" #  Plugins install                                                          #
+" #                                                                           #
+" #                                                                           #
+" #  Start                                                                    #
+" ############################################################################# 
+
 call plug#begin()
 Plug 'Yggdroot/indentLine'
 Plug 'terryma/vim-multiple-cursors'
@@ -27,56 +34,58 @@ Plug 'nvim-lua/completion-nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 call plug#end()
 
-set autoread
+" #############################################################################
+" #  Plugins install                                                          #
+" #                                                                           #
+" #                                                                           #
+" #  End                                                                      #
+" ############################################################################# 
 
-set termguicolors
-set background=dark
-colorscheme gruvbox
-
-set hidden
-
-" Do not display modes on bottom row
-set noshowmode
-
-" Always split right by default
-set splitright
-
-" Do not keep any history
-set nobackup
-set nowb
-set noswapfile
-
-set number
-set relativenumber
-
-set mouse=a
-
-set inccommand=split
-set clipboard+=unnamed
+" #############################################################################
+" #  Vim general setup                                                        #
+" #                                                                           #
+" #                                                                           #
+" #  Start                                                                    #
+" ############################################################################# 
 
 let mapleader=","
 
+set autoread
+set hidden
+set noshowmode
+set splitright
+set nobackup
+set nowb
+set noswapfile
+set number
+set relativenumber
+set mouse=a
+set inccommand=split
+set clipboard+=unnamed
+set completeopt=menuone,noinsert,noselect
+set termguicolors
+set background=dark
+
+colorscheme gruvbox
+
+" #############################################################################
+" #  Vim general setup                                                        #
+" #                                                                           #
+" #                                                                           #
+" #  End                                                                      #
+" ############################################################################# 
+
+" #############################################################################
+" #  Plugins general setup                                                    #
+" #                                                                           #
+" #                                                                           #
+" #  Start                                                                    #
+" ############################################################################# 
+
+" airline
 let g:airline_theme='gruvbox'
-
-nnoremap <leader>n :NERDTreeFind<CR>
-nnoremap <C-n> :NERDTree<CR>
+" nerdtree
 let NERDTreeShowHidden=1
-
-"Telescope mappings
-nnoremap <c-p> <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fc <cmd>Telescope grep_string<cr>
-nnoremap <c-f> <cmd>lua require('telescope.builtin').grep_string{ use_regex = true, search = vim.fn.input('Grep for > ' ) }<cr>
-nnoremap <leader>d <cmd>Telescope lsp_document_diagnostics<cr>
-nnoremap <leader>wd <cmd>Telescope lsp_workspace_diagnostics<cr>
-nnoremap <leader>fr <cmd>Telescope lsp_references<cr>
-nnoremap <silent>gd <cmd>Telescope lsp_definitions<cr>
-nnoremap <leader>ca <cmd>Telescope lsp_code_actions<cr>
-nnoremap <leader>fb <cmd>Telescope file_browser<cr>
-
-"Compe mappings
-inoremap <silent><expr> <CR> compe#confirm('<CR>')
-
 " vim-test
 let test#strategy = {
   \ 'nearest': 'neovim',
@@ -84,23 +93,12 @@ let test#strategy = {
   \ 'suite':   'basic',
 \}
 let g:test#preserve_screen = 1
-
-nmap <silent> t<C-n> :TestNearest<CR>
-nmap <silent> t<C-f> :TestFile<CR>
-nmap <silent> t<C-s> :TestSuite<CR>
-nmap <silent> t<C-l> :TestLast<CR>
-nmap <silent> t<C-v> :TestVisit<CR>
-
 " nvim-phpcsf
 let g:nvim_phpcs_config_phpcs_path = '/Users/gabriel/.composer/vendor/bin/phpcs'
 let g:nvim_phpcs_config_phpcbf_path = '/Users/gabriel/.composer/vendor/bin/phpcbf'
-let g:nvim_phpcs_config_phpcs_standard = 'PSR12' " or path to your ruleset phpcs.xml
+let g:nvim_phpcs_config_phpcs_standard = 'PSR12'
 
-nnoremap <leader>cs <cmd>:lua require'phpcs'.cs()<cr>
-nnoremap <leader>cbf <cmd>:lua require'phpcs'.cbf()<cr>
-
-" Completion setup
-set completeopt=menuone,noinsert,noselect
+" nvim-completion
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 lua require'lspconfig'.html.setup{on_attach=require'completion'.on_attach}
 lua require'lspconfig'.graphql.setup{on_attach=require'completion'.on_attach}
@@ -111,6 +109,63 @@ lua require'lspconfig'.jsonls.setup{on_attach=require'completion'.on_attach}
 lua require'lspconfig'.vimls.setup{on_attach=require'completion'.on_attach}
 lua require'lspconfig'.yamlls.setup{on_attach=require'completion'.on_attach}
 
+" #############################################################################
+" #  Plugins general setup                                                    #
+" #                                                                           #
+" #                                                                           #
+" #  End                                                                      #
+" ############################################################################# 
+
+" #############################################################################
+" #  Mappings                                                                 #
+" #                                                                           #
+" #                                                                           #
+" #  Start                                                                    #
+" ############################################################################# 
+
+" nerdtree
+nnoremap <leader>n :NERDTreeFind<CR>
+nnoremap <C-n> :NERDTree<CR>
+
+" telescope
+nnoremap <silent><c-t>fb <cmd>Telescope file_browser<cr>
+nnoremap <silent><c-t>ff <cmd>Telescope find_files<cr>
+nnoremap <silent><c-t>lg <cmd>Telescope live_grep<cr>
+nnoremap <silent><c-t>gc <cmd>Telescope grep_string<cr>
+nnoremap <silent><c-t>gs <cmd>lua require('telescope.builtin').grep_string{ use_regex = true, search = vim.fn.input('Grep for > ' ) }<cr>
+nnoremap <silent><c-t>dd <cmd>Telescope lsp_document_diagnostics<cr>
+nnoremap <silent><c-t>wd <cmd>Telescope lsp_workspace_diagnostics<cr>
+nnoremap <silent><c-t>r <cmd>Telescope lsp_references<cr>
+nnoremap <silent><c-t>ca <cmd>Telescope lsp_code_actions<cr>
+nnoremap <silent>gd <cmd> Telescope lsp_definitions<cr>
+
+" compe
+inoremap <silent><expr> <CR> compe#confirm('<CR>')
+
+" vim-test
+"nmap <silent> t<C-n> :TestNearest<CR>
+"nmap <silent> t<C-f> :TestFile<CR>
+"nmap <silent> t<C-s> :TestSuite<CR>
+"nmap <silent> t<C-l> :TestLast<CR>
+"nmap <silent> t<C-v> :TestVisit<CR>
+
+" nvim-phpcsf
+nnoremap <leader>cs <cmd>:lua require'phpcs'.cs()<cr>
+nnoremap <leader>cbf <cmd>:lua require'phpcs'.cbf()<cr>
+
+" #############################################################################
+" #  Mappings                                                                 #
+" #                                                                           #
+" #                                                                           #
+" #  End                                                                      #
+" ############################################################################# 
+
+" #############################################################################
+" #  Lua based plugins setup                                                  #
+" #                                                                           #
+" #                                                                           #
+" #  Start                                                                    #
+" ############################################################################# 
 
 lua << EOF
 require'nvim-web-devicons'.setup {}
@@ -205,13 +260,13 @@ local on_attach = function(client, bufnr)
   --Enable completion triggered by <c-x><c-o>
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  -- Mappings.
+  -- Lsp-config Mappings.
   local opts = { noremap=true, silent=true }
 
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   --buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   --buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   --buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   --buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
@@ -233,7 +288,12 @@ for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
-
 EOF
 
+" #############################################################################
+" #  Lua based plugins setup                                                  #
+" #                                                                           #
+" #                                                                           #
+" #  End                                                                      #
+" ############################################################################# 
 
