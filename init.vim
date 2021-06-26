@@ -1,5 +1,7 @@
 " #############################################################################
 " #  Plugins install                                                          #
+" #                                                                           #
+" #                                                                           #
 " #  Start                                                                    #
 " ############################################################################# 
 
@@ -11,7 +13,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
-Plug 'sheerun/vim-polyglot'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-fugitive'
 Plug 'xolox/vim-notes'
@@ -30,15 +31,20 @@ Plug 'vim-test/vim-test'
 Plug 'praem90/nvim-phpcsf'
 Plug 'nvim-lua/completion-nvim'
 Plug 'kyazdani42/nvim-web-devicons'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 call plug#end()
 
 " #############################################################################
 " #  Plugins install                                                          #
+" #                                                                           #
+" #                                                                           #
 " #  End                                                                      #
 " ############################################################################# 
 
 " #############################################################################
 " #  Vim general setup                                                        #
+" #                                                                           #
+" #                                                                           #
 " #  Start                                                                    #
 " ############################################################################# 
 
@@ -64,11 +70,15 @@ colorscheme gruvbox
 
 " #############################################################################
 " #  Vim general setup                                                        #
+" #                                                                           #
+" #                                                                           #
 " #  End                                                                      #
 " ############################################################################# 
 
 " #############################################################################
 " #  Plugins general setup                                                    #
+" #                                                                           #
+" #                                                                           #
 " #  Start                                                                    #
 " ############################################################################# 
 
@@ -84,6 +94,12 @@ let test#strategy = {
 \}
 let g:test#preserve_screen = 1
 " nvim-phpcsf
+
+augroup PHPCS
+    autocmd!
+    autocmd! BufWrite,BufEnter,InsertLeave *.php :lua require'phpcs'.cs()
+augroup END
+
 let g:nvim_phpcs_config_phpcs_path = '/Users/gabriel/.composer/vendor/bin/phpcs'
 let g:nvim_phpcs_config_phpcbf_path = '/Users/gabriel/.composer/vendor/bin/phpcbf'
 let g:nvim_phpcs_config_phpcs_standard = 'PSR12'
@@ -101,11 +117,15 @@ lua require'lspconfig'.yamlls.setup{on_attach=require'completion'.on_attach}
 
 " #############################################################################
 " #  Plugins general setup                                                    #
+" #                                                                           #
+" #                                                                           #
 " #  End                                                                      #
 " ############################################################################# 
 
 " #############################################################################
 " #  Mappings                                                                 #
+" #                                                                           #
+" #                                                                           #
 " #  Start                                                                    #
 " ############################################################################# 
 
@@ -114,15 +134,15 @@ nnoremap <leader>n :NERDTreeFind<CR>
 nnoremap <C-n> :NERDTree<CR>
 
 " telescope
-nnoremap <silent><c-t>fb <cmd>Telescope file_browser<cr>
-nnoremap <silent><c-t>ff <cmd>Telescope find_files<cr>
-nnoremap <silent><c-t>lg <cmd>Telescope live_grep<cr>
-nnoremap <silent><c-t>gc <cmd>Telescope grep_string<cr>
-nnoremap <silent><c-t>gs <cmd>lua require('telescope.builtin').grep_string{ use_regex = true, search = vim.fn.input('Grep for > ' ) }<cr>
-nnoremap <silent><c-t>dd <cmd>Telescope lsp_document_diagnostics<cr>
-nnoremap <silent><c-t>wd <cmd>Telescope lsp_workspace_diagnostics<cr>
-nnoremap <silent><c-t>r <cmd>Telescope lsp_references<cr>
-nnoremap <silent><c-t>ca <cmd>Telescope lsp_code_actions<cr>
+nnoremap <leader>fb <cmd>Telescope file_browser<cr>
+nnoremap <c-p> <cmd>Telescope find_files<cr>
+nnoremap <leader>lg <cmd>Telescope live_grep<cr>
+nnoremap <leader>gc <cmd>Telescope grep_string<cr>
+nnoremap <c-f> <cmd>lua require('telescope.builtin').grep_string{ use_regex = true, search = vim.fn.input('Grep for > ' ) }<cr>
+nnoremap <leader>dd <cmd>Telescope lsp_document_diagnostics<cr>
+nnoremap <leader>wd <cmd>Telescope lsp_workspace_diagnostics<cr>
+nnoremap <leader>rf <cmd>Telescope lsp_references<cr>
+nnoremap <leader>ca <cmd>Telescope lsp_code_actions<cr>
 nnoremap <silent>gd <cmd> Telescope lsp_definitions<cr>
 
 " compe
@@ -141,11 +161,15 @@ nnoremap <leader>cbf <cmd>:lua require'phpcs'.cbf()<cr>
 
 " #############################################################################
 " #  Mappings                                                                 #
+" #                                                                           #
+" #                                                                           #
 " #  End                                                                      #
 " ############################################################################# 
 
 " #############################################################################
 " #  Lua based plugins setup                                                  #
+" #                                                                           #
+" #                                                                           #
 " #  Start                                                                    #
 " ############################################################################# 
 
@@ -270,10 +294,19 @@ for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained",
+  highlight = {
+    enable = true,
+  },
+}
+
 EOF
 
 " #############################################################################
 " #  Lua based plugins setup                                                  #
+" #                                                                           #
+" #                                                                           #
 " #  End                                                                      #
 " ############################################################################# 
 
