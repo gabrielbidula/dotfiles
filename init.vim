@@ -6,14 +6,11 @@
 " ############################################################################# 
 
 call plug#begin()
+Plug 'jiangmiao/auto-pairs'
 Plug 'Yggdroot/indentLine'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
-Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-fugitive'
 Plug 'xolox/vim-notes'
 Plug 'xolox/vim-misc'
@@ -22,7 +19,7 @@ Plug 'preservim/nerdtree'
 Plug 'iamcco/diagnostic-languageserver', { 'do': 'yarn install' }
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
-Plug 'morhetz/gruvbox'
+Plug 'gruvbox-community/gruvbox'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
@@ -46,9 +43,17 @@ call plug#end()
 " #                                                                           #
 " #                                                                           #
 " #  Start                                                                    #
-" ############################################################################# 
+" #############################################################################
 
 let mapleader=","
+" Spaces & Tabs {{{
+set tabstop=4       " number of visual spaces per TAB
+set softtabstop=4   " number of spaces in tab when editing
+set shiftwidth=4    " number of spaces to use for autoindent
+set expandtab       " tabs are space
+set autoindent
+set copyindent      " copy indent from the previous line
+" }}} Spaces & Tabs
 
 set autoread
 set hidden
@@ -63,9 +68,9 @@ set mouse=a
 set inccommand=split
 set clipboard+=unnamed
 set completeopt=menuone,noinsert,noselect
+set cmdheight=1
 set termguicolors
 set background=dark
-
 colorscheme gruvbox
 
 " #############################################################################
@@ -295,10 +300,8 @@ for _, lsp in ipairs(servers) do
 end
 
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained",
-  highlight = {
-    enable = true,
-  },
+  indent = { enable = true },
+  highlight = { enable = true }
 }
 
 EOF
