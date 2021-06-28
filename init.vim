@@ -6,6 +6,7 @@
 " ############################################################################# 
 
 call plug#begin()
+Plug 'sheerun/vim-polyglot'
 Plug 'jiangmiao/auto-pairs'
 Plug 'Yggdroot/indentLine'
 Plug 'vim-airline/vim-airline'
@@ -26,9 +27,7 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'vim-test/vim-test'
 Plug 'praem90/nvim-phpcsf'
-Plug 'nvim-lua/completion-nvim'
 Plug 'kyazdani42/nvim-web-devicons'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 call plug#end()
 
 " #############################################################################
@@ -46,15 +45,13 @@ call plug#end()
 " #############################################################################
 
 let mapleader=","
-" Spaces & Tabs {{{
+
 set tabstop=4       " number of visual spaces per TAB
 set softtabstop=4   " number of spaces in tab when editing
 set shiftwidth=4    " number of spaces to use for autoindent
 set expandtab       " tabs are space
 set autoindent
 set copyindent      " copy indent from the previous line
-" }}} Spaces & Tabs
-
 set autoread
 set hidden
 set noshowmode
@@ -108,17 +105,6 @@ augroup END
 let g:nvim_phpcs_config_phpcs_path = '/Users/gabriel/.composer/vendor/bin/phpcs'
 let g:nvim_phpcs_config_phpcbf_path = '/Users/gabriel/.composer/vendor/bin/phpcbf'
 let g:nvim_phpcs_config_phpcs_standard = 'PSR12'
-
-" nvim-completion
-let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
-lua require'lspconfig'.html.setup{on_attach=require'completion'.on_attach}
-lua require'lspconfig'.graphql.setup{on_attach=require'completion'.on_attach}
-lua require'lspconfig'.dockerls.setup{on_attach=require'completion'.on_attach}
-lua require'lspconfig'.tsserver.setup{on_attach=require'completion'.on_attach}
-lua require'lspconfig'.bashls.setup{on_attach=require'completion'.on_attach}
-lua require'lspconfig'.jsonls.setup{on_attach=require'completion'.on_attach}
-lua require'lspconfig'.vimls.setup{on_attach=require'completion'.on_attach}
-lua require'lspconfig'.yamlls.setup{on_attach=require'completion'.on_attach}
 
 " #############################################################################
 " #  Plugins general setup                                                    #
@@ -234,6 +220,7 @@ require'lspconfig'.intelephense.setup{
   }
 }
 
+
 require'compe'.setup {
   enabled = true;
   autocomplete = true;
@@ -257,6 +244,7 @@ require'compe'.setup {
     nvim_lua = true;
     vsnip = true;
     ultisnips = true;
+    spell = true;
   };
 }
 
@@ -266,15 +254,9 @@ local nvim_lsp = require('lspconfig')
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  --Enable completion triggered by <c-x><c-o>
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Lsp-config Mappings.
   local opts = { noremap=true, silent=true }
-
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
   --buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   --buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
@@ -285,24 +267,26 @@ local on_attach = function(client, bufnr)
   --buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   --buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', '<leader>ld', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  --buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  --buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', 'dp', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', 'dn', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
   --buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
+  -- Set some keybinds conditional on server capabilities
+  if client.resolved_capabilities.document_formatting then
+    buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  end
+  if client.resolved_capabilities.document_range_formatting then
+    buf_set_keymap("v", "<leader>df", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+  end
 end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
 local servers = { "intelephense", "jsonls", "bashls", "vuels", "tsserver", "html", "graphql", "vimls", "yamlls" }
 for _, lsp in ipairs(servers) do
+-- Config that activates keymaps and enables snippet support
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
-
-require'nvim-treesitter.configs'.setup {
-  indent = { enable = true },
-  highlight = { enable = true }
-}
 
 EOF
 
