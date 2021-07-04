@@ -18,7 +18,6 @@ Plug 'preservim/nerdtree'
 Plug 'iamcco/diagnostic-languageserver', { 'do': 'yarn install' }
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
-Plug 'gruvbox-community/gruvbox'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
@@ -31,6 +30,9 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'ryanoasis/vim-devicons'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'rktjmp/lush.nvim'
+Plug 'npxbr/gruvbox.nvim'
 call plug#end()
 
 " #############################################################################
@@ -229,6 +231,7 @@ require'lspconfig'.intelephense.setup{
   }
 }
 
+require'lspconfig'.phpactor.setup{}
 
 require'compe'.setup {
   enabled = true,
@@ -278,12 +281,20 @@ local on_attach = function(client, bufnr)
   end
 end
 
-local servers = { "intelephense", "jsonls", "bashls", "vuels", "tsserver", "html", "graphql", "vimls", "yamlls" }
+local servers = { "intelephense", "phpactor", "jsonls", "bashls", "vuels", "tsserver", "html", "graphql", "vimls", "yamlls" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
-
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained",
+  indent = {
+    enable = true
+  },
+  highlight = {
+    enable = true
+  },
+}
 EOF
 
 " #############################################################################
