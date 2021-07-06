@@ -71,7 +71,7 @@ set completeopt=menuone,noinsert,noselect
 set cmdheight=1
 set termguicolors
 set background=dark
-colorscheme onedark
+colorscheme gruvbox
 
 " #############################################################################
 " #  Vim general setup                                                        #
@@ -188,7 +188,7 @@ require'lspconfig'.jsonls.setup{
 
 require('lualine').setup{
   options = {
-    theme = 'onedark'
+    theme = 'gruvbox'
   }
 }
 
