@@ -31,8 +31,7 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
-Plug 'rktjmp/lush.nvim'
-Plug 'npxbr/gruvbox.nvim'
+Plug 'joshdick/onedark.vim'
 call plug#end()
 
 " #############################################################################
@@ -72,7 +71,7 @@ set completeopt=menuone,noinsert,noselect
 set cmdheight=1
 set termguicolors
 set background=dark
-colorscheme gruvbox
+colorscheme onedark
 
 " #############################################################################
 " #  Vim general setup                                                        #
@@ -189,7 +188,7 @@ require'lspconfig'.jsonls.setup{
 
 require('lualine').setup{
   options = {
-    theme = 'gruvbox'
+    theme = 'onedark'
   }
 }
 
