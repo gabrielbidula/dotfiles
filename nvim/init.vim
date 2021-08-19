@@ -27,11 +27,12 @@ Plug 'praem90/nvim-phpcsf'
 Plug 'flazz/vim-colorschemes'
 Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
-Plug 'ryanoasis/vim-devicons'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
-Plug 'joshdick/onedark.vim'
+Plug 'EdenEast/nightfox.nvim'
+Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 call plug#end()
 
 " #############################################################################
@@ -53,6 +54,7 @@ let mapleader=","
 filetype on
 filetype plugin indent on
 
+set encoding=UTF-8
 set autoindent
 set copyindent
 set autoread
@@ -71,7 +73,13 @@ set completeopt=menuone,noinsert,noselect
 set cmdheight=1
 set termguicolors
 set background=dark
-colorscheme gruvbox
+
+" colorscheme
+let g:nightfox_style = "nordfox"
+let g:nightfox_color_delimiter = "red"
+let g:nightfox_italic_comments = 1
+
+colorscheme nightfox
 
 " #############################################################################
 " #  Vim general setup                                                        #
@@ -98,11 +106,11 @@ let test#strategy = {
 let g:test#preserve_screen = 1
 " nvim-phpcsf
 
-augroup PHBSCF
-    autocmd!
-    autocmd BufWritePost,BufReadPost,InsertLeave *.php :lua require'phpcs'.cs()
-    autocmd BufWritePost *.php :lua require'phpcs'.cbf()
-augroup END
+"augroup PHBSCF
+"    autocmd!
+"    autocmd BufWritePost,BufReadPost,InsertLeave *.php :lua require'phpcs'.cs()
+"    autocmd BufWritePost *.php :lua require'phpcs'.cbf()
+"augroup END
 
 let g:nvim_phpcs_config_phpcs_path = '/Users/gabriel/.composer/vendor/bin/phpcs'
 let g:nvim_phpcs_config_phpcbf_path = '/Users/gabriel/.composer/vendor/bin/phpcbf'
@@ -188,7 +196,7 @@ require'lspconfig'.jsonls.setup{
 
 require('lualine').setup{
   options = {
-    theme = 'gruvbox'
+    theme = 'nightfox'
   }
 }
 
