@@ -103,3 +103,4 @@ export LANG=en_US.UTF-8
 # Set Spaceship ZSH as a prompt
 autoload -U promptinit; promptinit
 prompt spaceship
+export PATH="$PATH:$HOME/.composer/vendor/bin"
