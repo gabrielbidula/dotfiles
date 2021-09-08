@@ -15,7 +15,6 @@ Plug 'xolox/vim-notes'
 Plug 'xolox/vim-misc'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'preservim/nerdtree'
-Plug 'iamcco/diagnostic-languageserver', { 'do': 'yarn install' }
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
 Plug 'nvim-lua/popup.nvim'
@@ -33,6 +32,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend upda
 Plug 'EdenEast/nightfox.nvim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'creativenull/diagnosticls-configs-nvim'
 call plug#end()
 
 " #############################################################################
@@ -74,12 +74,6 @@ set cmdheight=1
 set termguicolors
 set background=dark
 
-" colorscheme
-let g:nightfox_style = "nordfox"
-let g:nightfox_color_delimiter = "red"
-let g:nightfox_italic_comments = 1
-
-colorscheme nightfox
 
 " #############################################################################
 " #  Vim general setup                                                        #
@@ -97,6 +91,7 @@ colorscheme nightfox
 
 " nerdtree
 let NERDTreeShowHidden=1
+
 " vim-test
 let test#strategy = {
   \ 'nearest': 'neovim',
@@ -104,13 +99,13 @@ let test#strategy = {
   \ 'suite':   'basic',
 \}
 let g:test#preserve_screen = 1
-" nvim-phpcsf
 
+" nvim-phpcsf
 "augroup PHBSCF
 "    autocmd!
 "    autocmd BufWritePost,BufReadPost,InsertLeave *.php :lua require'phpcs'.cs()
 "    autocmd BufWritePost *.php :lua require'phpcs'.cbf()
-"augroup END
+"  augroup END
 
 let g:nvim_phpcs_config_phpcs_path = '/Users/gabriel/.composer/vendor/bin/phpcs'
 let g:nvim_phpcs_config_phpcbf_path = '/Users/gabriel/.composer/vendor/bin/phpcbf'
@@ -302,6 +297,33 @@ require'nvim-treesitter.configs'.setup {
     enable = true
   },
 }
+
+local phpcs = require('diagnosticls-configs.linters.phpcs')
+phpcs = vim.tbl_extend('force', phpcs, {
+  args = {'--report=emacs', '-s', '-'}
+})
+
+require 'diagnosticls-configs'.setup {
+  ['php'] = {
+    linter = phpcs,
+  },
+}
+
+local nightfox = require('nightfox')
+
+-- This function set the configuration of nightfox. If a value is not passed in the setup function
+-- it will be taken from the default configuration above
+nightfox.setup({
+  fox = "nordfox", -- change the colorscheme to use nordfox
+  styles = {
+    comments = "italic", -- change style of comments to be italic
+    keywords = "bold", -- change style of keywords to be bold
+    functions = "italic,bold" -- styles can be a comma separated list
+  }
+})
+
+-- Load the configuration set above and apply the colorscheme
+nightfox.load()
 EOF
 
 " #############################################################################
