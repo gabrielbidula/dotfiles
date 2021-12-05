@@ -15,15 +15,12 @@ Plug 'xolox/vim-notes'
 Plug 'xolox/vim-misc'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'preservim/nerdtree'
-Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/nvim-compe'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'vim-test/vim-test'
 Plug 'praem90/nvim-phpcsf'
-Plug 'flazz/vim-colorschemes'
 Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'hrsh7th/vim-vsnip'
@@ -31,8 +28,22 @@ Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 Plug 'EdenEast/nightfox.nvim'
 Plug 'ryanoasis/vim-devicons'
+Plug 'gruvbox-community/gruvbox'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'creativenull/diagnosticls-configs-nvim'
+Plug 'sbdchd/neoformat'
+Plug 'jparise/vim-graphql'
+
+" nvim-cmp - start
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+" nvim-cmp - end
 call plug#end()
 
 " #############################################################################
@@ -74,7 +85,6 @@ set cmdheight=1
 set termguicolors
 set background=dark
 
-
 " #############################################################################
 " #  Vim general setup                                                        #
 " #                                                                           #
@@ -99,17 +109,6 @@ let test#strategy = {
   \ 'suite':   'basic',
 \}
 let g:test#preserve_screen = 1
-
-" nvim-phpcsf
-"augroup PHBSCF
-"    autocmd!
-"    autocmd BufWritePost,BufReadPost,InsertLeave *.php :lua require'phpcs'.cs()
-"    autocmd BufWritePost *.php :lua require'phpcs'.cbf()
-"  augroup END
-
-let g:nvim_phpcs_config_phpcs_path = '/Users/gabriel/.composer/vendor/bin/phpcs'
-let g:nvim_phpcs_config_phpcbf_path = '/Users/gabriel/.composer/vendor/bin/phpcbf'
-let g:nvim_phpcs_config_phpcs_standard = 'PSR12'
 
 " #############################################################################
 " #  Plugins general setup                                                    #
@@ -141,19 +140,12 @@ nnoremap <leader>rf <cmd>Telescope lsp_references<cr>
 nnoremap <leader>ca <cmd>Telescope lsp_code_actions<cr>
 nnoremap <silent>gd <cmd> Telescope lsp_definitions<cr>
 
-" compe
-inoremap <silent><expr> <CR> compe#confirm('<CR>')
-
 " vim-test
 "nmap <silent> t<C-n> :TestNearest<CR>
 "nmap <silent> t<C-f> :TestFile<CR>
 "nmap <silent> t<C-s> :TestSuite<CR>
 "nmap <silent> t<C-l> :TestLast<CR>
 "nmap <silent> t<C-v> :TestVisit<CR>
-
-" nvim-phpcsf
-nnoremap <leader>cs <cmd>:lua require'phpcs'.cs()<cr>
-nnoremap <leader>cbf <cmd>:lua require'phpcs'.cbf()<cr>
 
 " #############################################################################
 " #  Mappings                                                                 #
@@ -171,27 +163,10 @@ nnoremap <leader>cbf <cmd>:lua require'phpcs'.cbf()<cr>
 
 lua << EOF
 require'nvim-web-devicons'.setup{}
-require'lspconfig'.html.setup{}
-require'lspconfig'.graphql.setup{}
-require'lspconfig'.dockerls.setup{}
-require'lspconfig'.tsserver.setup{}
-require'lspconfig'.vuels.setup{}
-require'lspconfig'.bashls.setup{}
-require'lspconfig'.vimls.setup{}
-require'lspconfig'.yamlls.setup{}
-require'lspconfig'.jsonls.setup{
-    commands = {
-      Format = {
-        function()
-          vim.lsp.buf.range_formatting({},{0,0},{vim.fn.line("$"),0})
-        end
-      }
-    }
-}
 
 require('lualine').setup{
   options = {
-    theme = 'nightfox'
+    theme = 'gruvbox'
   }
 }
 
@@ -233,34 +208,7 @@ require'lspconfig'.intelephense.setup{
   }
 }
 
-require'lspconfig'.phpactor.setup{}
-
-require'compe'.setup {
-  enabled = true,
-  autocomplete = true,
-  debug = false,
-  min_length = 1,
-  preselect = "enable",
-  throttle_time = 200,
-  source_timeout = 200,
-  incomplete_delay = 400,
-  allow_prefix_unmatch = false,
-
-  source = {
-    path = true,
-    buffer = true,
-    calc = false,
-    nvim_lsp = true,
-    nvim_lua = true,
-    spell = true,
-    tags = true,
-    luasnip = true,
-
-    treesitter = false,
-    snippets_nvim = false,
-    vsnip = false,
-  }
-}
+--require'lspconfig'.phpactor.setup{}
 
 local nvim_lsp = require('lspconfig')
 
@@ -283,10 +231,10 @@ local on_attach = function(client, bufnr)
   end
 end
 
-local servers = { "intelephense", "phpactor", "jsonls", "bashls", "vuels", "tsserver", "html", "graphql", "vimls", "yamlls" }
-for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup { on_attach = on_attach }
-end
+--local servers = { "intelephense", "jsonls", "bashls", "vuels", "tsserver", "html", "graphql", "vimls", "yamlls", "dockerls" }
+--for _, lsp in ipairs(servers) do
+--  nvim_lsp[lsp].setup { on_attach = on_attach }
+--end
 
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "maintained",
@@ -303,10 +251,100 @@ phpcs = vim.tbl_extend('force', phpcs, {
   args = {'--report=emacs', '-s', '-'}
 })
 
+local phpstan = require('diagnosticls-configs.linters.phpstan')
+
 require 'diagnosticls-configs'.setup {
   ['php'] = {
     linter = phpcs,
   },
+}
+
+ -- Setup nvim-cmp.
+  local cmp = require'cmp'
+
+  cmp.setup({
+    snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+        -- require'snippy'.expand_snippet(args.body) -- For `snippy` users.
+      end,
+    },
+    mapping = {
+      ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+      ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+      ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+      ['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
+      ['<C-e>'] = cmp.mapping({
+        i = cmp.mapping.abort(),
+        c = cmp.mapping.close(),
+      }),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    },
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline('/', {
+    sources = {
+      { name = 'buffer' }
+    }
+  })
+
+  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline(':', {
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    })
+  })
+
+  -- Setup lspconfig.
+  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+  require('lspconfig')['intelephense'].setup {
+    capabilities = capabilities
+  }
+  require('lspconfig')['jsonls'].setup {
+    capabilities = capabilities
+  }
+  require('lspconfig')['bashls'].setup {
+    capabilities = capabilities
+  }
+  require('lspconfig')['vuels'].setup {
+    capabilities = capabilities
+  }
+  require('lspconfig')['html'].setup {
+    capabilities = capabilities
+  }
+  require('lspconfig')['graphql'].setup {
+    capabilities = capabilities
+  }
+  require('lspconfig')['vimls'].setup {
+    capabilities = capabilities
+  }
+  require('lspconfig')['yamlls'].setup {
+    capabilities = capabilities
+  }
+  require('lspconfig')['dockerls'].setup {
+    capabilities = capabilities
+  }
+
+require('lualine').setup{
+  options = {
+    theme = 'nightfox'
+  }
 }
 
 local nightfox = require('nightfox')
