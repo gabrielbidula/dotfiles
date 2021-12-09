@@ -100,7 +100,14 @@ export LANG=en_US.UTF-8
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+alias phpstorm='open -a PhpStorm'
+
 # Set Spaceship ZSH as a prompt
 autoload -U promptinit; promptinit
 prompt spaceship
 export PATH="$PATH:$HOME/.composer/vendor/bin"
+
+
+source "/Users/gabriel/.oh-my-zsh/custom/themes/spaceship.zsh-theme"
+
+export PATH="/opt/homebrew/bin:$PATH"
