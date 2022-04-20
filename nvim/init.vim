@@ -22,7 +22,7 @@ set relativenumber
 set mouse=a
 set inccommand=split
 set clipboard+=unnamed
-set completeopt=menuone,noinsert,noselect
+set completeopt=menu,menuone,noselect
 set cmdheight=1
 set termguicolors
 set background=dark
@@ -106,46 +106,6 @@ nnoremap <C-n> :NERDTree<CR>
 nnoremap <c-p> <cmd>Telescope find_files<cr>
 nnoremap <c-f> <cmd>lua require('telescope.builtin').grep_string{ use_regex = true, search = vim.fn.input('Grep for > ' ) }<cr>
 
-" #############################################################################
-" #  Lua based plugins setup                                                  #
-" #                                                                           #
-" #                                                                           #
-" #  Start                                                                    #
-" ############################################################################# 
-
-"Telescope will find .lua file that exist at runtime
-lua require("gabriel") 
-
-"lua << EOF
-"require('telescope').setup{
-"  defaults = {
-"    vimgrep_arguments = {
-"      'rg',
-"      '--color=never',
-"      '--no-heading',
-"      '--with-filename',
-"      '--line-number',
-"      '--column',
-"      '--smart-case',
-"      '--fixed-strings'
-"    },
-"    sorting_strategy = "ascending",
-"    layout_strategy = "flex",
-"    winblend = 5,
-"    layout_config = {
-"      preview_cutoff = 40,
-"      prompt_position = "top",
-"      horizontal = {
-"        width = {padding = 0.1},
-"        height = {padding = 0.1},
-"        preview_width = 0.6,
-"      },
-"      vertical = {
-"        width = {padding = 0.05},
-"        height = {padding = 1},
-"        preview_height = 0.5,
-"      }
-"    },
-"  }
-"}
-"EOF
+" autoload
+lua require("general") 
+lua require("completion")
