@@ -3,6 +3,9 @@ local nightfox = require("nightfox")
 nightfox.setup {}
 vim.cmd[[colorscheme nordfox]]
 
+-- autopairs
+
+
 -- devicons
 require'nvim-web-devicons'.setup{}
 
@@ -14,7 +17,11 @@ require('lualine').setup{
 }
 
 -- treesitter
-require'nvim-treesitter.configs'.setup { ensure_installed = "all", highlight = { enable = true } }
+require'nvim-treesitter.configs'.setup { 
+	ensure_installed = "all",
+	highlight = { enable = true },
+	ignore_install = { "phpdoc" },
+}
 
 -- Native LSP Setup
 
@@ -46,8 +53,6 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<leader>ld', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', 'dp', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', 'dn', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
 	buf_set_keymap("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
 	buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
 	buf_set_keymap("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)

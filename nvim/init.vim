@@ -36,9 +36,9 @@ call plug#begin()
 Plug 'EdenEast/nightfox.nvim'
 Plug 'gruvbox-community/gruvbox'
 
-"nerdtree stuff
-Plug 'preservim/nerdtree'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+"nvim-tree
+Plug 'kyazdani42/nvim-web-devicons' " for file icons
+Plug 'kyazdani42/nvim-tree.lua'
 
 "language packs
 Plug 'sheerun/vim-polyglot'
@@ -87,8 +87,10 @@ call plug#end()
 " plugin configs
 "==============================================================================
 
-" nerdtree
-let NERDTreeShowHidden=1
+"nvim-tree
+nnoremap <C-n> :NvimTreeToggle<CR>
+nnoremap <leader>r :NvimTreeRefresh<CR>
+nnoremap <leader>n :NvimTreeFindFile<CR>
 
 "fzf
 let $FZF_DEFAULT_OPTS='--reverse'
@@ -99,10 +101,6 @@ let g:glow_use_pager = v:false
 " key mappings
 "==============================================================================
 
-" nerdtree
-nnoremap <leader>n :NERDTreeFind<CR>
-nnoremap <C-n> :NERDTree<CR>
-
 " telescope
 nnoremap <c-p> <cmd>Telescope find_files<cr>
 nnoremap <c-f> <cmd>lua require('telescope.builtin').grep_string{ use_regex = true, search = vim.fn.input('Grep for > ' ) }<cr>
@@ -110,3 +108,4 @@ nnoremap <c-f> <cmd>lua require('telescope.builtin').grep_string{ use_regex = tr
 " autoload
 lua require("general") 
 lua require("completion")
+lua require("fileexplorer")
