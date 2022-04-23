@@ -36,6 +36,10 @@ call plug#begin()
 Plug 'EdenEast/nightfox.nvim'
 Plug 'gruvbox-community/gruvbox'
 
+"nerdtree stuff
+Plug 'preservim/nerdtree'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+
 "language packs
 Plug 'sheerun/vim-polyglot'
 
@@ -49,11 +53,8 @@ Plug 'airblade/vim-gitgutter'
 "git details
 Plug 'tpope/vim-fugitive'
 
-"nerdtree stuff
-Plug 'preservim/nerdtree'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-
 "devicons
+Plug 'ryanoasis/vim-devicons'
 Plug 'kyazdani42/nvim-web-devicons'
 
 "telescope requirements
