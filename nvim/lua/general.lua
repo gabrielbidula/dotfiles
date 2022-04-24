@@ -3,8 +3,8 @@ local nightfox = require("nightfox")
 nightfox.setup {}
 vim.cmd[[colorscheme nordfox]]
 
--- autopairs
-
+-- comment
+require('Comment').setup{}
 
 -- devicons
 require'nvim-web-devicons'.setup{}

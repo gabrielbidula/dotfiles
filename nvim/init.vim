@@ -36,6 +36,12 @@ call plug#begin()
 Plug 'EdenEast/nightfox.nvim'
 Plug 'gruvbox-community/gruvbox'
 
+"comment
+Plug 'numToStr/Comment.nvim'
+
+"lsp-kind
+Plug 'onsails/lspkind.nvim'
+
 "nvim-tree
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
