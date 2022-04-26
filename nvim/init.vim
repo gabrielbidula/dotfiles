@@ -110,6 +110,7 @@ let g:glow_use_pager = v:false
 
 " telescope
 nnoremap <c-p> <cmd>Telescope find_files<cr>
+nnoremap <leader>gc <cmd>Telescope grep_string<cr>
 nnoremap <c-f> <cmd>lua require('telescope.builtin').grep_string{ use_regex = true, search = vim.fn.input('Grep for > ' ) }<cr>
 
 " autoload
