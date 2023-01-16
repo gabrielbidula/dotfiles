@@ -25,7 +25,8 @@ cmp.setup {
       { "i", "c" }
     ),
 
-    ["<c-space>"] = cmp.mapping {
+    --["<c-space>"] = cmp.mapping {
+    ["tab"] = cmp.mapping {
       i = cmp.mapping.complete(),
       c = function(
         _ --[[fallback]]
@@ -40,16 +41,16 @@ cmp.setup {
       end,
     },
 
-    ["<tab>"] = cmp.config.disable,
+    --["<tab>"] = cmp.config.disable,
 
-    ["<c-n>"] = function(fallback)
+    ["<c-j>"] = function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
       else
         fallback()
       end
     end,
-    ["<c-p>"] = function(fallback)
+    ["<c-k>"] = function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
       else

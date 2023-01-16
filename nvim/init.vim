@@ -35,6 +35,11 @@ call plug#begin()
 "colorscheme
 Plug 'EdenEast/nightfox.nvim'
 Plug 'gruvbox-community/gruvbox'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+
+"autopairs
+Plug 'jiangmiao/auto-pairs'
 
 "comment
 Plug 'numToStr/Comment.nvim'
@@ -88,6 +93,14 @@ Plug 'L3MON4D3/LuaSnip'
 
 "graphql
 Plug 'jparise/vim-graphql'
+
+"mason
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
+Plug 'neovim/nvim-lspconfig'
+
+" linters
+Plug 'jose-elias-alvarez/null-ls.nvim'
 call plug#end()
 
 "==============================================================================
@@ -110,10 +123,11 @@ let g:glow_use_pager = v:false
 
 " telescope
 nnoremap <c-p> <cmd>Telescope find_files<cr>
-nnoremap <leader>gc <cmd>Telescope grep_string<cr>
+nnoremap <leader>f <cmd>Telescope grep_string<cr>
 nnoremap <c-f> <cmd>lua require('telescope.builtin').grep_string{ use_regex = true, search = vim.fn.input('Grep for > ' ) }<cr>
 
 " autoload
 lua require("general") 
 lua require("completion")
 lua require("fileexplorer")
+lua require("nullls")
