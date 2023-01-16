@@ -6,7 +6,6 @@ let mapleader=","
 
 filetype on
 filetype plugin indent on
-
 set encoding=UTF-8
 set autoindent
 set copyindent
@@ -26,6 +25,7 @@ set completeopt=menu,menuone,noselect
 set cmdheight=1
 set termguicolors
 set background=dark
+set statusline+=%{get(b:,'gitsigns_status','')} "used by gitsigns plugin
 
 "==================================================================================
 "plugins
@@ -37,9 +37,14 @@ Plug 'EdenEast/nightfox.nvim'
 Plug 'gruvbox-community/gruvbox'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+Plug 'shaunsingh/solarized.nvim'
+Plug 'junegunn/seoul256.vim'
+
+"transparent background
+Plug 'xiyaowong/nvim-transparent'
 
 "autopairs
-Plug 'jiangmiao/auto-pairs'
+Plug 'windwp/nvim-autopairs'
 
 "comment
 Plug 'numToStr/Comment.nvim'
@@ -58,11 +63,8 @@ Plug 'sheerun/vim-polyglot'
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
 
-"git diff markers
-Plug 'airblade/vim-gitgutter'
-
-"git details
-Plug 'tpope/vim-fugitive'
+"git
+Plug 'lewis6991/gitsigns.nvim'
 
 "devicons
 Plug 'ryanoasis/vim-devicons'
@@ -107,11 +109,6 @@ call plug#end()
 " plugin configs
 "==============================================================================
 
-"nvim-tree
-nnoremap <C-n> :NvimTreeToggle<CR>
-nnoremap <leader>r :NvimTreeRefresh<CR>
-nnoremap <leader>n :NvimTreeFindFile<CR>
-
 "fzf
 let $FZF_DEFAULT_OPTS='--reverse'
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
@@ -126,8 +123,13 @@ nnoremap <c-p> <cmd>Telescope find_files<cr>
 nnoremap <leader>f <cmd>Telescope grep_string<cr>
 nnoremap <c-f> <cmd>lua require('telescope.builtin').grep_string{ use_regex = true, search = vim.fn.input('Grep for > ' ) }<cr>
 
+"==============================================================================
 " autoload
-lua require("general") 
-lua require("completion")
-lua require("fileexplorer")
-lua require("nullls")
+"==============================================================================
+
+lua require("colors")
+lua require("general-config") 
+lua require("completion-config")
+lua require("nullls-config")
+lua require("gitsigns-config")
+lua require("transparent-config")
